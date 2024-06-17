@@ -58,6 +58,7 @@
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
+		const mode = 0 // 0: existing method, 1: new method
 		const time = Date.now();
 		console.log("encryption and transmission start : " + time);            
 
@@ -66,26 +67,36 @@
 		const id = document.getElementById('id').value;
 		const password = document.getElementById('password').value;
 
+		var secretKey;
+		var encryptedId;
+		var encryptedPassword;
+		var token;
+
 		// Encrypt the ID and password values
 		// Existing logic for data transfer
-		// Uncomment when existing logic is active
-		const secretKey = 'secret key value from DNSSEC TLSA record';
-		const encryptedId = CryptoJS.AES.encrypt(id, secretKey).toString();
-		const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+		if (mode == 0) {	
+			secretKey = 'secret key value from DNSSEC TLSA record';
+			encryptedId = CryptoJS.AES.encrypt(id, secretKey).toString();
+			encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+		}
 
 		// Does not encrypt the ID and password values
 		// New logic for data transfer
-		// Uncomment when new logic is active
-		// const encryptedId = id;
-		// const encryptedPassword = password;
-		// const token = 'token value';
+		if (mode == 1) {
+			encryptedId = id;
+			encryptedPassword = password;
+			token = 'token value which is to be used for validation in the server 0';
+		}
 
 		// Prepare the data to be sent
 		const data = new URLSearchParams();
 		data.append('id', encryptedId);
 		data.append('password', encryptedPassword);
 		data.append('time', time);
-		//data.append('token', token);
+
+		if (mode == 1) {
+			data.append('token', token);
+		}
 
 		fetch('/login', {
 			method: 'POST',
