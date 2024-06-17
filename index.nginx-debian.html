@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Data Transfer Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Secure Data</h2>
+        <form id="loginForm">
+            <input type="text" id="id" name="id" placeholder="Enter your secure data" required>
+            <input type="password" id="password" name="password" placeholder="Enter your secure data" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Include CryptoJS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+		const time = Date.now();
+		console.log("encryption and transmission start : " + time);            
+
+		event.preventDefault();
+
+		const id = document.getElementById('id').value;
+		const password = document.getElementById('password').value;
+
+		// Encrypt the ID and password values
+		// Existing logic for data transfer
+		// Uncomment when existing logic is active
+		const secretKey = 'secret key value from DNSSEC TLSA record';
+		const encryptedId = CryptoJS.AES.encrypt(id, secretKey).toString();
+		const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+
+		// Does not encrypt the ID and password values
+		// New logic for data transfer
+		// Uncomment when new logic is active
+		// const encryptedId = id;
+		// const encryptedPassword = password;
+
+		// Prepare the data to be sent
+		const data = new URLSearchParams();
+		data.append('id', encryptedId);
+		data.append('password', encryptedPassword);
+		data.append('time', time);
+
+		fetch('/login', {
+			method: 'POST',
+			body: data
+		}).then(response => {
+		if (response.ok) {
+		    	alert('Login successful!');
+		} else {
+		    	alert('Login failed!');
+		}
+		}).catch(error => {
+			console.error('Error:', error);
+			alert('An error occurred. Please try again.');
+		});
+        });
+    </script>
+</body>
+</html>
+
