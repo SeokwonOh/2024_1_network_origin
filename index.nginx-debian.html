@@ -78,12 +78,14 @@
 		// Uncomment when new logic is active
 		// const encryptedId = id;
 		// const encryptedPassword = password;
+		// const token = 'token value';
 
 		// Prepare the data to be sent
 		const data = new URLSearchParams();
 		data.append('id', encryptedId);
 		data.append('password', encryptedPassword);
 		data.append('time', time);
+		//data.append('token', token);
 
 		fetch('/login', {
 			method: 'POST',
